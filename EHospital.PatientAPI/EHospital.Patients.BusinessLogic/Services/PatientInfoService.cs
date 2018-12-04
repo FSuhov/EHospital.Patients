@@ -46,7 +46,7 @@ namespace EHospital.Patients.BusinessLogic.Services
                                   where patient.IsDeleted != true
                                   join entry in _data.GetAppointments() on patient.Id equals entry.PatientId
                                   orderby entry.AppointmentDateTime descending
-                                  select patient).Take(3);
+                                  select patient).Distinct().Take(5);
 
             var result = _mapper.Map<IEnumerable<PatientInfo>, IEnumerable<PatientView>>(recentPatients);
 
