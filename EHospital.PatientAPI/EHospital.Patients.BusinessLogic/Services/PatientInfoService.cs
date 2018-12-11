@@ -41,7 +41,6 @@ namespace EHospital.Patients.BusinessLogic.Services
         /// <returns> The collection of PatientView objects.</returns>
         public IEnumerable<PatientView> GetRecentPatients()
         {
-            // TODO: Implement search throw PatientAppoinment table when available
             var recentPatients = (from patient in _data.GetPatients()
                                   where patient.IsDeleted != true
                                   join entry in _data.GetAppointments() on patient.Id equals entry.PatientId

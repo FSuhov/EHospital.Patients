@@ -95,6 +95,9 @@ namespace EHospital.Patients.Tests
             recent.Add(mockPatients.First(p => p.Id == 10));
             recent.Add(mockPatients.First(p => p.Id == 2));
             recent.Add(mockPatients.First(p => p.Id == 1));
+            recent.Add(mockPatients.First(p => p.Id == 4));
+            recent.Add(mockPatients.First(p => p.Id == 7));
+
             List<PatientView> recentViews = _mapper.Map<List<PatientInfo>, List<PatientView>>(recent);
 
             // Act
@@ -158,6 +161,94 @@ namespace EHospital.Patients.Tests
 
             Assert.AreEqual(expectedCount, actualCount);
             Assert.AreEqual(true, isNewPatientAdded);
+        }
+
+        [TestMethod]
+        public void GetAllImagesTest()
+        {
+            // Act
+            List<Image> actual = _service.GetImages().ToList();
+
+            // Assert
+            bool areAllEntriesEqual = true;
+            for (int i = 0; i < actual.Count && i < mockImages.Count; i++)
+            {
+                if (actual[i].Id != mockImages[i].Id || actual[i].ImageName != mockImages[i].ImageName)
+                {
+                    areAllEntriesEqual = false;
+                }
+            }
+
+            Assert.AreEqual(true, areAllEntriesEqual);
+        }
+
+        [TestMethod]
+        [DataRow(1)]
+        [DataRow(3)]
+        public void GetImageByIdTest_ValidId(int imageId)
+        {
+            // Act
+            Image actualImage = _service.GetImageById(imageId);
+
+            // Assert
+            Assert.AreEqual(mockImages[imageId-1].Id, actualImage.Id);
+            Assert.AreEqual(mockImages[imageId - 1].ImageName, actualImage.ImageName);
+        }
+
+        [TestMethod]
+        [DataRow(6)]
+        [DataRow(-3)]
+        public void GetImageByIdTest_InValidId(int imageId)
+        {
+            // Act
+            Image actualImage = _service.GetImageById(imageId);
+
+            // Assert
+            Assert.AreEqual(null, actualImage);
+        }
+
+        [TestMethod]
+        [DataRow(1)]
+        public void DeletePatientTest_ValidId(int patientId)
+        {
+            // Arrange
+            PatientInfo patientToBeDeleted = _service.GetPatientById(patientId);
+            // Act
+            _service.DeletePatient(patientId);
+
+            // Assert
+            Assert.AreEqual(true, patientToBeDeleted.IsDeleted);
+        }
+
+        [TestMethod]
+        [DataRow(1)]
+        public void UpdatePatientTest_ValidPatientId(int patientId)
+        {
+            // Arrange
+            PatientInfo patient = new PatientInfo()
+            {
+                Id = 1,
+                FirstName = "James+",
+                LastName = "Bond+",
+                Country = "UK",
+                City = "London",
+                Address = "Douning str, 11",
+                BirthDate = new System.DateTime(1970, 1, 18),
+                Phone = "380505554334",
+                Email = "mi5@gmail.com",
+                Gender = 1,
+                ImageId = 1,
+                IsDeleted = false
+            };
+
+            PatientInfo patientToBeUpdated = _service.GetPatientById(patientId);
+
+            // Act
+            _service.UpdatePatient(patientId, patient);
+
+            // Assert
+            Assert.AreEqual(patient.FirstName, patientToBeUpdated.FirstName);
+            Assert.AreEqual(patient.LastName, patientToBeUpdated.LastName);
         }
 
         private static List<Image> mockImages = new List<Image>
