@@ -9,7 +9,7 @@ namespace EHospital.Patients.Data
         IEnumerable<PatientInfo> GetPatients();
         IEnumerable<Appointment> GetAppointments();
 
-        Image GetImage(int id);
+        Image GetImage(int? id);
         void AddImage(Image image);
 
         PatientInfo GetPatient(int id);

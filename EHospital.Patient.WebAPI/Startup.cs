@@ -49,7 +49,7 @@ namespace EHospital.Patient.WebAPI
                 {
                     Version = "v1",
                     Title = "eHospital",
-                    Description = "Patient web api for eHostpital Project",
+                    Description = "Patient web api for eHospital Project",
                     TermsOfService = "Welcome everybody!",
                     Contact = new Swashbuckle.AspNetCore.Swagger.Contact() { Name = "Alex Brylov", Email = "aksu@ukr.net" }
                 });

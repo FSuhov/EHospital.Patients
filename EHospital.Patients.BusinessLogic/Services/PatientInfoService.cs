@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using EHospital.Patients.Data;
 using EHospital.Patients.Model;
@@ -137,6 +138,53 @@ namespace EHospital.Patients.BusinessLogic.Services
         public Image GetImageById(int imageId)
         {
             return _data.GetImage(imageId);
+        }
+
+        /// <summary>
+        /// Adds Image as bytes array into DataBase for specified Patient.
+        /// </summary>
+        /// <param name="patientId">Id of Patient whose image is being uploaded.</param>
+        /// <param name="imageData">Image as array of bytes.</param>
+        public void AddImage(int patientId, byte[] imageData)
+        {
+            PatientInfo patient = _data.GetPatient(patientId);
+            if (patient.ImageId == null)
+            {
+                Image newImage = new Image();
+                newImage.ImageName = patient.LastName + "_image";
+                newImage.ImageContent = imageData;
+
+                _data.AddImage(newImage);
+
+                Image insertedImage = _data.GetImages().Where(i => i.ImageName == newImage.ImageName).FirstOrDefault();
+                patient.ImageId = insertedImage.Id;
+            }
+            else
+            {
+                Image imageToUpdate = _data.GetImage(patient.ImageId);
+                imageToUpdate.ImageContent = imageData;
+                _data.Save();
+            }
+
+            _data.Save();
+        }
+
+        /// <summary>
+        /// Gets ImageContent of Image of specified Patient.
+        /// Throws NullReferenceException if patient not found or no image for this patient.
+        /// </summary>
+        /// <param name="patientId">Id of Patient whose image is to be downloaded.</param>
+        /// <returns>Image as bytes array.</returns>
+        public byte[] DownloadImage(int patientId)
+        {
+            PatientInfo patient = _data.GetPatient(patientId);
+            if (patient == null || patient.ImageId == null)
+            {
+                throw new NullReferenceException("No image for this patient");
+            }
+
+            byte[] imageData = _data.GetImage(patient.ImageId).ImageContent;
+            return imageData;
         }
     }
 }

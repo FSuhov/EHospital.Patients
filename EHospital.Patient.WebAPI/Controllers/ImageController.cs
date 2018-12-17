@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EHospital.Patients.BusinessLogic.Services;
 using EHospital.Patients.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EHospital.Patient.WebAPI.Controllers
@@ -52,6 +56,45 @@ namespace EHospital.Patient.WebAPI.Controllers
             }
 
             return image;
+        }
+
+        /// <summary>
+        /// Handles request POST: api/image
+        /// </summary>
+        /// <param name="patientId">Id of patient whose image is being uploaded. </param>
+        /// <param name="img">File to be uploaded.</param>
+        /// <returns>Ok</returns>
+        [HttpPost]
+        public IActionResult AddImage(int patientId, IFormFile img)
+        {
+
+            byte[] imageData = null;
+            using (var binaryReader = new BinaryReader(img.OpenReadStream()))
+            {
+                imageData = binaryReader.ReadBytes((int)img.Length);
+            }
+
+            _service.AddImage(patientId, imageData);
+
+            return Ok();
+        }
+
+        [HttpGet("download")]
+        public IActionResult DownloadImage(int patientId)
+        {
+            string fileType = "image/png";
+            string fileName = "image.jpg";
+            Byte[] data;
+            try
+            {
+                data = _service.DownloadImage(patientId);
+            }
+            catch (NullReferenceException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return File(data, fileType, fileName);
         }
     }
 }

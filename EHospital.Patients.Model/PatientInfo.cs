@@ -40,7 +40,7 @@ namespace EHospital.Patients.Model
         public string Email { get; set; }
 
         [ForeignKey("Image")]
-        public int ImageId { get; set; }
+        public int? ImageId { get; set; }
 
         public bool IsDeleted { get; set; }
     }

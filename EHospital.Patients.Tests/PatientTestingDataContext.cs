@@ -52,5 +52,10 @@ namespace EHospital.Patients.Tests
         {
             return;
         }
+
+        public Image GetImage(int? id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

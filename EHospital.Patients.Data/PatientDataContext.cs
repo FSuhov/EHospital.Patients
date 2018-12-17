@@ -71,7 +71,7 @@ namespace EHospital.Patients.Data
         /// </summary>
         /// <param name="id">Id of Image to look for</param>
         /// <returns>Image object with requested Id or NULL if not found</returns>
-        public Image GetImage(int id)
+        public Image GetImage(int? id)
         {
             return Images.FirstOrDefault(i => i.Id == id);
         }

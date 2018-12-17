@@ -65,5 +65,14 @@ namespace EHospital.Patients.BusinessLogic.Services
         /// </summary>
         /// <param name="patientId">Id of patient to be disabled</param>
         void DeletePatient(int patientId);
+
+        /// <summary>
+        /// Adds new Image to database, updates Patient entry with ImageId foreign key. 
+        /// </summary>
+        /// <param name="patientId">Id of Patient to whom this imageData relates.</param>
+        /// <param name="imageData">Byte array uploaded by user.</param>
+        void AddImage(int patientId, byte[] imageData);
+
+        byte[] DownloadImage(int patientId);
     }
 }
